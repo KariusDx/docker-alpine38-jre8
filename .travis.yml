@@ -1,0 +1,22 @@
+sudo: required
+dist: trusty
+language: minimal
+
+services:
+- docker
+
+# To regenerate secrets, set environment variables mentioned below and:
+#   travis encrypt DOCKER_USER=$DOCKER_USER DOCKER_PASS=$DOCKER_PASS
+  
+env:
+  global:
+  - IMAGE=kariusdx/docker-alpine38-jre8
+  - TAG=8u171
+  - secure: "AV2v/OViTuYJPH7ccQSm/9HJDzYJXoEhJocwm7Ory6NepqnG9GgX4AdJV0gctDE5+JrySTwUqTWBIWNdOqzdSSsp50YeDcXGF45/MA23Qr+xhBNwjCaK8/n6T7pBZ32QcBi5z/5po4x2nC2+5iPxTQRIdPPNsUe/6wrfSPmNGNWzvrE3TOBfzrnfals/NyehBRJyRe8w+n+CbZMnCvyzw2ofhgYehAUqxo69YgkJUp9StjIBmic2jG09A7WMmg0ME5eNNsJ4sogpsO0I8D8SzkvgIdBH07COLBlANC+Gvf7SUwiuEJ79RDN6lqLbfw0QZLJzDRoM9F7HJb1DY+e4WK0VSw3iOmG/JddaT33pgga1IJGgDFFXQmWI8F8Eqay+uE2BXvK/ijYZxnhI/HAiyTGC5TY1AA6ETbB0n8FuoYD/k1MxqwKp7DaqTzEo3qVgouZ5ul7QGcs8tU1EDeC3DTsZcjennpu/k1LMcPMgVQa2/RB6KAIsg8srPzlyrfer5xEr1CrLguY8lJ0Z/IrIualoKrglkQ7DWL1SDBZiZW6Kev8BMfX82sAq4WMtEK+QmR2zj4LnEiaO9jShSn0ZJKwNEW+PImDU4Y/UjCToynuQKmqH+zT53cNZO5dLuP1w/tqPplo2ISwevrZ3VbuejsvyjucQwDlobaBjAH5kHCk="
+
+script:
+- docker build --tag $IMAGE:$TAG .
+
+after_success:
+- docker login -u $DOCKER_USER -p $DOCKER_PASS
+- docker push $IMAGE:$TAG
